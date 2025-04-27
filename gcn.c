@@ -85,22 +85,14 @@ void gcn_forward(
     memset(output_features, 0, (size_t)num_nodes * out_dim * sizeof(float));
 
     for (int u = 0; u < num_nodes; ++u) {
-        // Include self-loop
-        float norm_u_self = 1.0f / sqrtf((float)graph->degrees[u] * graph->degrees[u]);
-        for (int k = 0; k < out_dim; ++k) {
-            output_features[u * out_dim + k] += norm_u_self * transformed_features[u * out_dim + k];
-        }
-
-        // Aggregate neighbors
         int start = graph->row_ptr[u];
         int end = graph->row_ptr[u + 1];
         for (int edge_idx = start; edge_idx < end; ++edge_idx) {
             int v = graph->col_idx[edge_idx]; // Neighbor node
 
-            // Calculate normalization coefficient: 1 / sqrt(deg(u) * deg(v)) using precomputed degrees (which include the +1 for self-loop)
             float norm_uv = 1.0f / sqrtf((float)graph->degrees[u] * graph->degrees[v]);
 
-            for (int k = 0; k < out_dim; ++k) { // For each output feature dimension
+            for (int k = 0; k < out_dim; ++k) {
                 output_features[u * out_dim + k] += norm_uv * transformed_features[v * out_dim + k];
             }
         }
