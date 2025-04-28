@@ -54,7 +54,6 @@ void gcn_forward_avx(CsrGraph* graph, GcnLayerAvx* layer, float* input_features,
     // temp buffer for transformed features
     float* transformed_features = (float*)malloc((size_t)num_nodes * out_dim * sizeof(float));
     if (!transformed_features) {
-        perror("Failed to allocate transformed features");
         return;
     }
 

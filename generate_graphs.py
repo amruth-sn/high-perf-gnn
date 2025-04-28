@@ -6,7 +6,7 @@ from scipy.sparse import eye
 def generate_erdos_renyi_graph(num_nodes=100000, param=0.001, seed=999, output_prefix="graph", save_binary=False):
     np.random.seed(seed)
 
-    G = ig.Graph.Erdos_Renyi(n=num_nodes, p=param, directed=False, loops=False) # undirected, no selfloops
+    G = ig.Graph.Erdos_Renyi(n=num_nodes, p=param, directed=False, loops=False) # undirected w/o selfloops
 
     edges = np.array(G.get_edgelist())
     row = edges[:, 0]
@@ -23,7 +23,7 @@ def generate_erdos_renyi_graph(num_nodes=100000, param=0.001, seed=999, output_p
     # Add selfloops manually
     A += eye(num_nodes, format='csr')
 
-    # Extract CSR
+    # CSR
     row_ptr = A.indptr
     col_idx = A.indices
 

@@ -7,19 +7,16 @@
 #include <asm/unistd.h>
 #include "graph.h"
 #include "gcn_avx.h"
-#define FEATURE_DIM 64  // parameterize later
+#define FEATURE_DIM 64 
 
 #define CLOCK_SPEED 2.8
-// Simple timing
+
 double get_time_ms() {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
     return (double)ts.tv_sec * 1000.0 + (double)ts.tv_nsec / 1e6;
 }
 
-// Load array from file
-#include <stdio.h>
-#include <stdlib.h>
 
 // Loads an array of int from a .bin file
 int* load_binary_array(const char* filename, int* length_out) {
@@ -79,7 +76,6 @@ int main() {
 
     FILE* csv = fopen("avx_results.csv", "w");
     if (!csv) {
-        perror("Failed to open CSV file");
         return 1;
     }
     fprintf(csv, "NodeCount,GraphID,ExecutionTime(ms),Cycles,CPE\n");
@@ -113,7 +109,6 @@ int main() {
             int* col_idx = load_binary_array(col_idx_filename, &col_len);
 
             if (!row_ptr || !col_idx) {
-                fprintf(stderr, "Failed to load binary CSR graph\n");
                 return 1;
             }
 
@@ -124,7 +119,6 @@ int main() {
                 continue;
             }
 
-            // Allocate features
             float* input_features = malloc((size_t)num_nodes * FEATURE_DIM * sizeof(float));
             float* output_features = malloc((size_t)num_nodes * FEATURE_DIM * sizeof(float));
             if (!input_features || !output_features) {
@@ -142,7 +136,6 @@ int main() {
             GcnLayerAvx* layer = create_gcn_layer_avx(FEATURE_DIM, FEATURE_DIM);
             initialize_weights_random_avx(layer);
 
-            // Seup performance counter
             
 
             double start = get_time_ms();
@@ -159,7 +152,6 @@ int main() {
             total_time += exec_time_sec;
             total_cpe += cpe;
 
-            // Cleanup
             free_graph(graph);
             free(row_ptr);
             free(col_idx);

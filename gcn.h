@@ -7,8 +7,7 @@
 typedef struct {
     int input_dim;
     int output_dim;
-    float *weights; // flattened weight matrix (input_dim * output_dim)
-    // TODO: add bias
+    float *weights; // (input_dim * output_dim)
 } GcnLayer;
 
 GcnLayer* create_gcn_layer(int input_dim, int output_dim);

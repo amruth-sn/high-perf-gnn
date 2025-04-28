@@ -55,7 +55,6 @@ void gcn_forward_parallel(CsrGraph* graph, GcnLayerParallel* layer, float* input
 
     float* transformed_features = (float*)malloc((size_t)num_nodes * out_dim * sizeof(float));
     if (!transformed_features) {
-        perror("Failed to allocate transformed features");
         return;
     }
 

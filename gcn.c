@@ -2,28 +2,25 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <math.h> // For sqrtf
+#include <math.h> 
 
-// Basic ReLU activation function
+// relu
 float relu(float x) {
     return x > 0 ? x : 0;
 }
 
 GcnLayer* create_gcn_layer(int input_dim, int output_dim) {
     if (input_dim <= 0 || output_dim <= 0) {
-        fprintf(stderr, "Invalid dimensions for GCN layer\n");
         return NULL;
     }
     GcnLayer *layer = (GcnLayer*)malloc(sizeof(GcnLayer));
     if (!layer) {
-        perror("Failed to allocate memory for GCN layer");
         return NULL;
     }
     layer->input_dim = input_dim;
     layer->output_dim = output_dim;
     layer->weights = (float*)malloc((size_t)input_dim * output_dim * sizeof(float));
     if (!layer->weights) {
-        perror("Failed to allocate memory for layer weights");
         free(layer);
         return NULL;
     }
@@ -47,15 +44,14 @@ void initialize_weights_random(GcnLayer* layer) {
     }
 }
 
-// GCN forward pass implementation
+// GCN forward pass
 void gcn_forward(
     CsrGraph* graph,
     GcnLayer* layer,
     float* input_features,
-    float* output_features // Must be pre-allocated
+    float* output_features 
 ) {
     if (!graph || !layer || !input_features || !output_features) {
-        fprintf(stderr, "NULL pointer passed to gcn_forward\n");
         return;
     }
 
@@ -79,8 +75,8 @@ void gcn_forward(
         }
     }
 
-    // Aggregation (Including normalization and self-loops)
-    // Initialize output features to zero before aggregation
+    // Aggregation
+    // init output features to zero
     memset(output_features, 0, (size_t)num_nodes * out_dim * sizeof(float));
 
     for (int u = 0; u < num_nodes; ++u) {
