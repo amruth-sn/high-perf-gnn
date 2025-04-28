@@ -1,6 +1,6 @@
 # high-perf-gnn
 
-This repository contains code for high-performance graph neural network (GNN) implementations.
+Benchmarking high-performance graph convolutional network (GNN) implementations.
 
 ## Structure
 
@@ -16,7 +16,7 @@ This repository contains code for high-performance graph neural network (GNN) im
   
 ## Generating Graphs
 
-To generate smaller graphs run this command from root:
+To generate smaller graphs, run this command from root:
 
 ```bash
 python3 scripts/generate_graphs.py
@@ -41,6 +41,6 @@ make serial
 # AVX2-optimized
 make avx
 
-# Parallelized
+# OpenMP-Parallelized
 make parallel
 ```
