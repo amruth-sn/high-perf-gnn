@@ -1,6 +1,6 @@
 # high-perf-gnn
 
-Benchmarking high-performance graph convolutional network (GNN) implementations.
+Benchmarking high-performance graph convolutional network (GCN) implementations.
 
 ## Structure
 
