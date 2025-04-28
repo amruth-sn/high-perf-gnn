@@ -63,17 +63,16 @@ void gcn_forward(
     int in_dim = layer->input_dim;
     int out_dim = layer->output_dim;
 
-    // Feature Transformation (Z = H * W)
+    // H' = HW
     float* transformed_features = (float*)calloc((size_t)num_nodes * out_dim, sizeof(float));
     if (!transformed_features) {
-        perror("Failed to allocate memory for transformed features");
         return;
     }
 
-    for (int i = 0; i < num_nodes; ++i) { // For each node
-        for (int j = 0; j < out_dim; ++j) { // For each output feature dimension
+    for (int i = 0; i < num_nodes; ++i) { //nodewise
+        for (int j = 0; j < out_dim; ++j) { 
             float sum = 0.0f;
-            for (int k = 0; k < in_dim; ++k) { // Dot product
+            for (int k = 0; k < in_dim; ++k) { 
                 sum += input_features[i * in_dim + k] * layer->weights[k * out_dim + j];
             }
             transformed_features[i * out_dim + j] = sum;

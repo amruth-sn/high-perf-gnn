@@ -1,2 +1,6 @@
 .venv/
 *.txt
+*_nodes/
+output/
+.vscode/
+*.csv
