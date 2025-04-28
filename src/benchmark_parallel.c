@@ -6,8 +6,9 @@
 #include <sys/syscall.h>
 #include <asm/unistd.h>
 #include "graph.h"
-#include "gcn_avx.h"
-#define FEATURE_DIM 64 
+#include "gcn_parallel.h"
+
+#define FEATURE_DIM 64  
 
 #define CLOCK_SPEED 2.8
 
@@ -71,10 +72,10 @@ int* load_binary_array(const char* filename, int* length_out) {
 int main() {
     srand((unsigned int)time(NULL));
 
-    const int node_sizes[] = {1000, 10000, 100000, 1000000};
+    const int node_sizes[] = {1000, 10000};
     const int num_node_sizes = sizeof(node_sizes) / sizeof(node_sizes[0]);
 
-    FILE* csv = fopen("avx_results.csv", "w");
+    FILE* csv = fopen("data/parallel_results.csv", "w");
     if (!csv) {
         return 1;
     }
@@ -133,13 +134,13 @@ int main() {
                 input_features[i] = (float)rand() / RAND_MAX;
             }
 
-            GcnLayerAvx* layer = create_gcn_layer_avx(FEATURE_DIM, FEATURE_DIM);
-            initialize_weights_random_avx(layer);
+            GcnLayerParallel* layer = create_gcn_layer_parallel(FEATURE_DIM, FEATURE_DIM);
+            initialize_weights_random_parallel(layer);
 
             
 
             double start = get_time_ms();
-            gcn_forward_avx(graph, layer, input_features, output_features);
+            gcn_forward_parallel(graph, layer, input_features, output_features);
             double end = get_time_ms();
 
             double exec_time_ms = end - start;
@@ -157,7 +158,7 @@ int main() {
             free(col_idx);
             free(input_features);
             free(output_features);
-            free_gcn_layer_avx(layer);
+            free_gcn_layer_parallel(layer);
         }
 
         double avg_time = total_time / num_graphs;

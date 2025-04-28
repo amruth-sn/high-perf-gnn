@@ -20,4 +20,4 @@ NODE_SIZE=${NODE_SIZES[$NODE_SIZE_INDEX]}
 
 echo "Generating graph: nodes=${NODE_SIZE}, seed=${SEED}"
 
-python3 generate_large_graphs.py ${NODE_SIZE} ${SEED}
+python3 scripts/generate_large_graphs.py ${NODE_SIZE} ${SEED}

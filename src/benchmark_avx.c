@@ -6,9 +6,8 @@
 #include <sys/syscall.h>
 #include <asm/unistd.h>
 #include "graph.h"
-#include "gcn.h"
-
-#define FEATURE_DIM 64  // parameterize later
+#include "gcn_avx.h"
+#define FEATURE_DIM 64 
 
 #define CLOCK_SPEED 2.8
 
@@ -19,7 +18,7 @@ double get_time_ms() {
 }
 
 
-
+// Loads an array of int from a .bin file
 int* load_binary_array(const char* filename, int* length_out) {
     FILE* f = fopen(filename, "rb");
     if (!f) {
@@ -75,7 +74,7 @@ int main() {
     const int node_sizes[] = {1000, 10000, 100000, 1000000};
     const int num_node_sizes = sizeof(node_sizes) / sizeof(node_sizes[0]);
 
-    FILE* csv = fopen("serial_results.csv", "w");
+    FILE* csv = fopen("data/avx_results.csv", "w");
     if (!csv) {
         return 1;
     }
@@ -120,10 +119,10 @@ int main() {
                 continue;
             }
 
-            // Allocate features
             float* input_features = malloc((size_t)num_nodes * FEATURE_DIM * sizeof(float));
             float* output_features = malloc((size_t)num_nodes * FEATURE_DIM * sizeof(float));
             if (!input_features || !output_features) {
+                perror("Failed to allocate features");
                 free_graph(graph);
                 free(row_ptr); free(col_idx);
                 free(input_features); free(output_features);
@@ -134,13 +133,13 @@ int main() {
                 input_features[i] = (float)rand() / RAND_MAX;
             }
 
-            GcnLayer* layer = create_gcn_layer(FEATURE_DIM, FEATURE_DIM);
-            initialize_weights_random(layer);
+            GcnLayerAvx* layer = create_gcn_layer_avx(FEATURE_DIM, FEATURE_DIM);
+            initialize_weights_random_avx(layer);
 
             
 
             double start = get_time_ms();
-            gcn_forward(graph, layer, input_features, output_features);
+            gcn_forward_avx(graph, layer, input_features, output_features);
             double end = get_time_ms();
 
             double exec_time_ms = end - start;
@@ -158,7 +157,7 @@ int main() {
             free(col_idx);
             free(input_features);
             free(output_features);
-            free_gcn_layer(layer);
+            free_gcn_layer_avx(layer);
         }
 
         double avg_time = total_time / num_graphs;
