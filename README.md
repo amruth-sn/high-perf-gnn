@@ -1,4 +1,4 @@
-# high-perf-gnn
+# High-Performance Graph Neural Networks
 
 Benchmarking high-performance graph convolutional network (GCN) implementations.
 
@@ -21,7 +21,7 @@ To generate smaller graphs, run this command from root:
 ```bash
 python3 scripts/generate_graphs.py
 ```
-For larger graphs, run this command from root:
+For larger graphs, run this command from root on a Sun Grid Engine:
 
 ```bash
 bash scripts/generate_large_graphs.sh
@@ -44,3 +44,15 @@ make avx
 # OpenMP-Parallelized
 make parallel
 ```
+
+## Considerations
+
+Generated graph row/col arrays for node sizes >10^5^ are **large**. Make sure you have enough storage space!
+
+Feel free to play around with parameters for graph sparsity, edge probabilities, node counts, etc. I'm doing this too!
+
+## Current Work
+
+I'm working on benchmarking the GPU implementation of this simple GCN using NVIDIA's [CUDA](https://developer.nvidia.com/cuda-toolkit) library.
+
+I also want to extend these algorithms to N-layer networks, parameterized feature dimensions, and ultimately work towards a backpropagation implementation for sparse graph operations to learn the weight matrix!
