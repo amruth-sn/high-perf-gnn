@@ -56,3 +56,7 @@ Feel free to play around with parameters for graph sparsity, edge probabilities,
 I'm working on benchmarking the GPU implementation of this simple GCN using NVIDIA's [CUDA](https://developer.nvidia.com/cuda-toolkit) library.
 
 I also want to extend these algorithms to N-layer networks, parameterized feature dimensions, and ultimately work towards a backpropagation implementation for sparse graph operations to learn the weight matrix!
+
+## Learn More
+
+Read `report.pdf`! :)
